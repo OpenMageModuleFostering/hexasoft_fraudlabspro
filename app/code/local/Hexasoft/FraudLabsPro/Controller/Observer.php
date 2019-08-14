@@ -33,6 +33,11 @@ class Hexasoft_FraudLabsPro_Controller_Observer{
 	}
 
 	public function processSendRequestToFraudLabsPro($order){
+		$orderId = $order->getIncrementId();
+
+		if(empty($orderId))
+			return true;
+
 		if(isset($_SERVER['DEV_MODE'])) $_SERVER['REMOTE_ADDR'] = '175.143.8.154';
 
 		$apiKey = Mage::getStoreConfig('fraudlabspro/basic_settings/api_key');
@@ -50,26 +55,26 @@ class Hexasoft_FraudLabsPro_Controller_Observer{
 		}
 
 		$queries = array(
-			'format'=>'json',
-			'key'=>$apiKey,
-			'ip'=>$ip,
-			'first_name'=>$order->getCustomerFirstname(),
-			'last_name'=>$order->getCustomerLastname(),
-			'bill_city'=>$billingAddress->getCity(),
-			'bill_state'=>$billingAddress->getRegion(),
-			'bill_country'=>$billingAddress->getCountryId(),
-			'bill_zip_code'=>$billingAddress->getPostcode(),
-			'email_domain'=>substr($order->getCustomerEmail(), strpos($order->getCustomerEmail(), '@')+1),
-			'email_hash'=>$this->_hash($order->getCustomerEmail()),
-			'email'=>$order->getCustomerEmail(),
-			'user_phone'=>$billingAddress->getTelephone(),
-			'amount'=>$order->getBaseGrandTotal(),
-			'quantity'=>count($order->getAllItems()),
-			'currency'=>Mage::app()->getStore()->getCurrentCurrencyCode(),
-			'user_order_id'=>$order->getIncrementId(),
-			'magento_order_id'=>$order->getEntityId(),
-			'source'=>'magento',
-			'source_version'=>'1.0.10',
+			'format'			=> 'json',
+			'key'				=> $apiKey,
+			'ip'				=> $ip,
+			'first_name'		=> $order->getCustomerFirstname(),
+			'last_name'			=> $order->getCustomerLastname(),
+			'bill_city'			=> $billingAddress->getCity(),
+			'bill_state'		=> $billingAddress->getRegion(),
+			'bill_country'		=> $billingAddress->getCountryId(),
+			'bill_zip_code'		=> $billingAddress->getPostcode(),
+			'email_domain'		=> substr($order->getCustomerEmail(), strpos($order->getCustomerEmail(), '@')+1),
+			'email_hash'		=> $this->_hash($order->getCustomerEmail()),
+			'email'				=> $order->getCustomerEmail(),
+			'user_phone'		=> $billingAddress->getTelephone(),
+			'amount'			=> $order->getBaseGrandTotal(),
+			'quantity'			=> count($order->getAllItems()),
+			'currency'			=> Mage::app()->getStore()->getCurrentCurrencyCode(),
+			'user_order_id'		=> $orderId,
+			'magento_order_id'	=> $order->getEntityId(),
+			'source'			=> 'magento',
+			'source_version'	=> '1.0.11',
 		);
 
 		$shippingAddress = $order->getShippingAddress();
