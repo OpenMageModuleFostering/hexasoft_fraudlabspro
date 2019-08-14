@@ -95,7 +95,7 @@ class Hexasoft_FraudLabsPro_Controller_Observer{
 			'payment_mode'		=> $paymentMode,
 			'flp_checksum'		=> Mage::getModel('core/cookie')->get('flp_checksum'),
 			'source'			=> 'magento',
-			'source_version'	=> '1.2.2',
+			'source_version'	=> '1.2.3',
 		);
 
 		$shippingAddress = $order->getShippingAddress();

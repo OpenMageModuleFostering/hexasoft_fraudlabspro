@@ -155,7 +155,8 @@ class Hexasoft_FraudLabsPro_Block_Sales_Order_Fraudlabsproresult extends Mage_Ad
 						<div style="text-align:center;padding:10px">
 							<input type="submit" name="approve" value="Approve Order" />
 							<input type="submit" name="reject" value="Reject Order" />
-							<input type="submit" name="reject-blacklist" value="Blacklist Order" />
+							<!--input type="submit" name="reject-blacklist" value="Blacklist Order" /-->
+							<input type="button" id="reject-blacklist" name="reject-blacklist" value="Blacklist Order" />
 						</div>
 					</form>
 				</td>
