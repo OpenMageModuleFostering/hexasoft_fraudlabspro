@@ -33,9 +33,21 @@ class Hexasoft_FraudLabsPro_Controller_Observer{
 	}
 
 	public function processSendRequestToFraudLabsPro($order){
+		$orderId = $order->getIncrementId();
+
+		if(empty($orderId))
+			return true;
+
+		$data = unserialize($order->getfraudlabspro_response());
+
+		if($data)
+			return true;
+
 		if(isset($_SERVER['DEV_MODE'])) $_SERVER['REMOTE_ADDR'] = '175.143.8.154';
 
 		$apiKey = Mage::getStoreConfig('fraudlabspro/basic_settings/api_key');
+		$reviewStatus = Mage::getStoreConfig('fraudlabspro/basic_settings/review_status');
+		$rejectStatus = Mage::getStoreConfig('fraudlabspro/basic_settings/reject_status');
 
 		$billingAddress = $order->getBillingAddress();
 
@@ -50,23 +62,26 @@ class Hexasoft_FraudLabsPro_Controller_Observer{
 		}
 
 		$queries = array(
-			'format'=>'json',
-			'key'=>$apiKey,
-			'ip'=>$ip,
-			'bill_city'=>$billingAddress->getCity(),
-			'bill_state'=>$billingAddress->getRegion(),
-			'bill_country'=>$billingAddress->getCountryId(),
-			'bill_zip_code'=>$billingAddress->getPostcode(),
-			'email_domain'=>substr($order->getCustomerEmail(), strpos($order->getCustomerEmail(), '@')+1),
-			'email_hash'=>$this->_hash($order->getCustomerEmail()),
-			'user_phone'=>$billingAddress->getTelephone(),
-			'amount'=>$order->getBaseGrandTotal(),
-			'quantity'=>count($order->getAllItems()),
-			'currency'=>Mage::app()->getStore()->getCurrentCurrencyCode(),
-			'user_order_id'=>$order->getIncrementId(),
-			'magento_order_id'=>$order->getEntityId(),
-			'source'=>'magento',
-			'source_version'=>'1.0.9',
+			'format'			=> 'json',
+			'key'				=> $apiKey,
+			'ip'				=> $ip,
+			'first_name'		=> $order->getCustomerFirstname(),
+			'last_name'			=> $order->getCustomerLastname(),
+			'bill_city'			=> $billingAddress->getCity(),
+			'bill_state'		=> $billingAddress->getRegion(),
+			'bill_country'		=> $billingAddress->getCountryId(),
+			'bill_zip_code'		=> $billingAddress->getPostcode(),
+			'email_domain'		=> substr($order->getCustomerEmail(), strpos($order->getCustomerEmail(), '@')+1),
+			'email_hash'		=> $this->_hash($order->getCustomerEmail()),
+			'email'				=> $order->getCustomerEmail(),
+			'user_phone'		=> $billingAddress->getTelephone(),
+			'amount'			=> $order->getBaseGrandTotal(),
+			'quantity'			=> count($order->getAllItems()),
+			'currency'			=> Mage::app()->getStore()->getCurrentCurrencyCode(),
+			'user_order_id'		=> $orderId,
+			'magento_order_id'	=> $order->getEntityId(),
+			'source'			=> 'magento',
+			'source_version'	=> '1.0.11',
 		);
 
 		$shippingAddress = $order->getShippingAddress();
@@ -79,29 +94,83 @@ class Hexasoft_FraudLabsPro_Controller_Observer{
 			$queries['ship_country'] = $shippingAddress->getCountryId();
 		}
 
-		$query = '';
-		foreach($queries as $key=>$value){
-			$query .= $key . '=' . rawurlencode($value) . '&';
-		}
+		$response = $this->http('https://api.fraudlabspro.com/v1/order/screen?' . http_build_query($queries));
 
-		for($i=0; $i<3; $i++){
-			$response = $this->_get('https://api.fraudlabspro.com/v1/order/screen?' . $query);
-
-			if(is_null($result = json_decode($response, true)) === FALSE) break;
-		}
-
-		if(!$result) return false;
+		if(is_null($result = json_decode($response, true)) === TRUE)
+			return false;
 
 		$result['ip_address'] = $queries['ip'];
 		$result['api_key'] = $apiKey;
 
 		$order->setfraudlabspro_response(serialize($result))->save();
 
+		if($result['fraudlabspro_status'] == 'REVIEW'){
+			switch($reviewStatus){
+				case 'pending':
+					$order->setState(Mage_Sales_Model_Order::STATE_NEW, true)->save();
+					break;
+
+				case 'processing':
+					$order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, true)->save();
+					break;
+
+				case 'complete':
+					$order->setState(Mage_Sales_Model_Order::STATE_COMPLETE, true)->save();
+					break;
+
+				case 'closed':
+					$order->setState(Mage_Sales_Model_Order::STATE_CLOSED, true)->save();
+					break;
+
+				case 'canceled':
+					if($order->canCancel()) {
+						$order->cancel()->save();
+					}
+					break;
+
+				case 'holded':
+					$order->setState(Mage_Sales_Model_Order::STATE_HOLDED, true)->save();
+					break;
+
+			}
+		}
+
+		if($result['fraudlabspro_status'] == 'REJECT'){
+			switch($rejectStatus){
+				case 'pending':
+					$order->setState(Mage_Sales_Model_Order::STATE_NEW, true)->save();
+					break;
+
+				case 'processing':
+					$order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, true)->save();
+					break;
+
+				case 'complete':
+					$order->setState(Mage_Sales_Model_Order::STATE_COMPLETE, true)->save();
+					break;
+
+				case 'closed':
+					$order->setState(Mage_Sales_Model_Order::STATE_CLOSED, true)->save();
+					break;
+
+				case 'canceled':
+					if($order->canCancel()) {
+						$order->cancel()->save();
+					}
+					break;
+
+				case 'holded':
+					$order->setState(Mage_Sales_Model_Order::STATE_HOLDED, true)->save();
+					break;
+
+			}
+		}
+
 		Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('fraudlabspro')->__('FraudLabs Pro Request sent.'));
 		return true;
 	}
 
-	private function _get($url){
+	private function http($url){
 		$ch = curl_init();
 
 		curl_setopt($ch, CURLOPT_FAILONERROR, 1);
