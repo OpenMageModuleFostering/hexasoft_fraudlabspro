@@ -59,12 +59,13 @@ class Hexasoft_FraudLabsPro_Controller_Observer{
 			'bill_zip_code'=>$billingAddress->getPostcode(),
 			'email_domain'=>substr($order->getCustomerEmail(), strpos($order->getCustomerEmail(), '@')+1),
 			'email_hash'=>$this->_hash($order->getCustomerEmail()),
-			'phone'=>$billingAddress->getTelephone(),
+			'user_phone'=>$billingAddress->getTelephone(),
 			'amount'=>$order->getBaseGrandTotal(),
 			'quantity'=>count($order->getAllItems()),
 			'currency'=>Mage::app()->getStore()->getCurrentCurrencyCode(),
 			'user_order_id'=>$order->getIncrementId(),
 			'magento_order_id'=>$order->getEntityId(),
+			'source'=>'magento',
 		);
 
 		$shippingAddress = $order->getShippingAddress();
