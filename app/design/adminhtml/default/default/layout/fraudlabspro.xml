@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<layout>
+	<adminhtml_sales_order_view>
+		<reference name="order_tab_info">
+			<action method="setTemplate" ifconfig="fraudlabspro/basic_settings/active"><template>fraudlabspro/sales/order/view/tab/info.phtml</template></action>
+			<block type="fraudlabspro/sales_order_fraudlabsproresult" name="fraudlabspro_sales_order_fraudlabsproresult"></block>
+		</reference>
+	</adminhtml_sales_order_view>
+</layout>

@@ -1,5 +1,5 @@
 <?php
-class Hexasoft_FraudLabsPro_Block_Sales_Order_FraudLabsProResult extends Mage_Adminhtml_Block_Template{
+class Hexasoft_FraudLabsPro_Block_Sales_Order_Fraudlabsproresult extends Mage_Adminhtml_Block_Template{
     protected function _toHtml(){
 		if(!Mage::getStoreConfig('fraudlabspro/basic_settings/active')){
 			return false;
@@ -33,7 +33,7 @@ class Hexasoft_FraudLabsPro_Block_Sales_Order_FraudLabsProResult extends Mage_Ad
 			</div>
 
 			<fieldset>
-				This order is not procssed by FraudLabs Pro.
+				This order is not processed by FraudLabs Pro.
 			</fieldset>
 		</div>';
 
