@@ -1,0 +1,16 @@
+{
+    "name": "OpenMageModuleFostering/Hexasoft_FraudLabsPro",
+    "type": "magento-module",
+    "license": "Open-Software-License-(OSL)",
+    "homepage": "",
+    "description": "This extension screens online transactions for frauds.",
+    "authors": [
+    {
+        "name": "Hexasoft",
+        "email": "tech@hexasoft.com.my"
+    }
+],
+    "suggest": {
+        "magento-hackathon/magento-composer-installer": "*"
+    }
+}

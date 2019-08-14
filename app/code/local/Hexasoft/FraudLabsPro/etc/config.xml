@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<config>
+	<modules>
+		<Hexasoft_FraudLabsPro>
+			<version>1.0.0</version>
+		</Hexasoft_FraudLabsPro>
+	</modules>
+
+	<global>
+		<blocks>
+			<fraudlabspro>
+				<class>Hexasoft_FraudLabsPro_Block</class>
+			</fraudlabspro>
+			<adminhtml>
+				<rewrite>
+					<sales_order_grid>Hexasoft_FraudLabsPro_Block_Sales_Order_Grid</sales_order_grid>
+				</rewrite>
+			</adminhtml>
+		</blocks>
+		<models>
+			<fraudlabspro>
+				<class>Hexasoft_FraudLabsPro_Model</class>
+			</fraudlabspro>
+		</models>
+		<helpers>
+            <fraudlabspro>
+                <class>Hexasoft_FraudLabsPro_Helper</class>
+            </fraudlabspro>
+		</helpers>
+		
+		<resources>
+			<fraudlabspro_setup>
+                <setup>
+                    <module>Hexasoft_FraudLabsPro</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </fraudlabspro_setup>
+
+            <fraudlabspro_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </fraudlabspro_write>
+            <fraudlabspro_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </fraudlabspro_read>
+        </resources>
+		
+		<events>
+			<sales_order_save_after>
+				<observers>
+					<send_request_to_fraudlabspro>
+						<type>singleton</type>
+						<class>Hexasoft_FraudLabsPro_Controller_Observer</class>
+						<method>sendRequestToFraudLabsPro</method>
+					</send_request_to_fraudlabspro>
+				</observers>
+			</sales_order_save_after>  
+		</events>
+	</global>
+
+	<adminhtml>
+		<layout>
+            <updates>
+                <fraudlabspro>
+                    <file>fraudlabspro.xml</file>
+				</fraudlabspro>
+			</updates>
+		</layout>
+	</adminhtml>
+	
+	<frontend>
+		<routers>
+			<fraudlabspro>
+                <use>standard</use>
+                <args>
+                    <module>Hexasoft_FraudLabsPro</module>
+                    <frontName>fraudlabspro</frontName>
+                </args>
+            </fraudlabspro>
+		</routers>
+	</frontend>
+	 
+	<default>
+		<fraudlabspro>
+			<basic_settings>
+				<active>0</active>
+				<api_key></api_key>
+			</basic_settings>
+		</fraudlabspro>
+	</default>
+</config>
