@@ -39,10 +39,20 @@ class Hexasoft_FraudLabsPro_Controller_Observer{
 
 		$billingAddress = $order->getBillingAddress();
 
+		$ip = $_SERVER['REMOTE_ADDR'];
+
+		if(isset($_SERVER['HTTP_CF_CONNECTING_IP']) && filter_var($_SERVER['HTTP_CF_CONNECTING_IP'], FILTER_VALIDATE_IP)){
+			$ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
+		}
+
+		if(isset($_SERVER['HTTP_X_FORWARDED_FOR']) && filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP)){
+			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+		}
+
 		$queries = array(
 			'format'=>'json',
 			'key'=>$apiKey,
-			'ip'=>$_SERVER['REMOTE_ADDR'],
+			'ip'=>$ip,
 			'bill_city'=>$billingAddress->getCity(),
 			'bill_state'=>$billingAddress->getRegion(),
 			'bill_country'=>$billingAddress->getCountryId(),

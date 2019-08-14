@@ -77,13 +77,13 @@ class Hexasoft_FraudLabsPro_Block_Sales_Order_Grid extends Mage_Adminhtml_Block_
             'options' => Mage::getSingleton('sales/order_config')->getStatuses(),
         ));
 
-		$this->addColumn('risk', array(
+		/*$this->addColumn('risk', array(
             'header'    => Mage::helper('sales')->__('Risk Assessment'),
             'width'     => '50px',
             'sortable'  => false,
             'filter'    => false,
             'renderer'  => 'fraudlabspro/sales_order_grid_renderer_risk',
-        ));
+        ));*/
 
         if (Mage::getSingleton('admin/session')->isAllowed('sales/order/actions/view')) {
             $this->addColumn('action',

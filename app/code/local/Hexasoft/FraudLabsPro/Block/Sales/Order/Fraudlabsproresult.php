@@ -33,7 +33,7 @@ class Hexasoft_FraudLabsPro_Block_Sales_Order_Fraudlabsproresult extends Mage_Ad
 			</div>
 
 			<fieldset>
-				This order is not procssed by FraudLabs Pro.
+				This order is not processed by FraudLabs Pro.
 			</fieldset>
 		</div>';
 
