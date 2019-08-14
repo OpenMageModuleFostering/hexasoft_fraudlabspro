@@ -61,12 +61,24 @@ class Hexasoft_FraudLabsPro_Controller_Observer{
 			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
 		}
 
+		$payment_mode = $order->getPayment()->getMethod();
+		if($payment_mode === 'ccsave'){
+			$paymentMode = 'creditcard';
+		}elseif($payment_mode === 'cashondelivery'){
+			$paymentMode = 'cod';
+		}elseif($payment_mode === 'paypal_standard' || $payment_mode === 'paypal_express'){
+			$paymentMode = 'paypal';
+		}else{
+			$paymentMode = $payment_mode;
+		}
+
 		$queries = array(
 			'format'			=> 'json',
 			'key'				=> $apiKey,
 			'ip'				=> $ip,
 			'first_name'		=> $order->getCustomerFirstname(),
 			'last_name'			=> $order->getCustomerLastname(),
+			'bill_addr'			=> trim($billingAddress->getStreet(1) . ' ' . $billingAddress->getStreet(2)),
 			'bill_city'			=> $billingAddress->getCity(),
 			'bill_state'		=> $billingAddress->getRegion(),
 			'bill_country'		=> $billingAddress->getCountryId(),
@@ -80,9 +92,10 @@ class Hexasoft_FraudLabsPro_Controller_Observer{
 			'currency'			=> Mage::app()->getStore()->getCurrentCurrencyCode(),
 			'user_order_id'		=> $orderId,
 			'magento_order_id'	=> $order->getEntityId(),
+			'payment_mode'		=> $paymentMode,
 			'flp_checksum'		=> Mage::getModel('core/cookie')->get('flp_checksum'),
 			'source'			=> 'magento',
-			'source_version'	=> '1.2.0',
+			'source_version'	=> '1.2.2',
 		);
 
 		$shippingAddress = $order->getShippingAddress();

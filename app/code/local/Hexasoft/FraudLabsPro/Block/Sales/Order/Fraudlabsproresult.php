@@ -9,14 +9,15 @@ class Hexasoft_FraudLabsPro_Block_Sales_Order_Fraudlabsproresult extends Mage_Ad
 
 		$data = unserialize($order->getfraudlabspro_response());
 
-		if(isset($_GET['approve']) || isset($_GET['fraud'])){
+		if(isset($_GET['approve']) || isset($_GET['reject']) || isset($_GET['reject-blacklist'])){
 			$data['fraudlabspro_status'] = (isset($_GET['approve'])) ? 'APPROVE' : 'REJECT';
+			$action = (isset($_GET['approve'])) ? 'APPROVE' : ((isset($_GET['reject'])) ? 'REJECT' : 'REJECT_BLACKLIST');
 			$apiKey = (isset($_GET['apiKey'])) ? $_GET['apiKey'] : '';
 			$flpId = (isset($_GET['flpId'])) ? $_GET['flpId'] : '';
 
 
 			for($i=0; $i<3; $i++){
-				$response = $this->_get('https://api.fraudlabspro.com/v1/order/feedback?key=' . rawurlencode($apiKey) . '&action=' . $data['fraudlabspro_status'] . '&id=' . rawurlencode($flpId) . '&format=json');
+				$response = $this->_get('https://api.fraudlabspro.com/v1/order/feedback?key=' . rawurlencode($apiKey) . '&action=' . $action . '&id=' . rawurlencode($flpId) . '&format=json');
 
 				if(is_null($result = json_decode($response, true)) === FALSE) break;
 			}
@@ -153,7 +154,8 @@ class Hexasoft_FraudLabsPro_Block_Sales_Order_Fraudlabsproresult extends Mage_Ad
 
 						<div style="text-align:center;padding:10px">
 							<input type="submit" name="approve" value="Approve Order" />
-							<input type="submit" name="fraud" value="Reject Order" />
+							<input type="submit" name="reject" value="Reject Order" />
+							<input type="submit" name="reject-blacklist" value="Blacklist Order" />
 						</div>
 					</form>
 				</td>
