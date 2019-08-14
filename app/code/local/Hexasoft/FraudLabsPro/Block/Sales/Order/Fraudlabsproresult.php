@@ -141,7 +141,7 @@ class Hexasoft_FraudLabsPro_Block_Sales_Order_Fraudlabsproresult extends Mage_Ad
 			</tr>
 			<tr>
 				<td style="padding:5px;"><span><strong>Link</strong></span></td>
-				<td colspan="6" style="padding:5px;"><span><a href="http://www.fraudlabspro.com/merchant/transaction-details/' . $data['fraudlabspro_id'] . '" target="_blank">http://www.fraudlabspro.com/merchant/transaction-details/' . $data['fraudlabspro_id'] . '</a></span></td>
+				<td colspan="6" style="padding:5px;"><span><a href="https://www.fraudlabspro.com/merchant/transaction-details/' . $data['fraudlabspro_id'] . '" target="_blank">https://www.fraudlabspro.com/merchant/transaction-details/' . $data['fraudlabspro_id'] . '</a></span></td>
 			</tr>';
 
 		if($data['fraudlabspro_status'] == 'REVIEW'){
@@ -155,8 +155,8 @@ class Hexasoft_FraudLabsPro_Block_Sales_Order_Fraudlabsproresult extends Mage_Ad
 						<div style="text-align:center;padding:10px">
 							<input type="submit" name="approve" value="Approve Order" />
 							<input type="submit" name="reject" value="Reject Order" />
-							<!--input type="submit" name="reject-blacklist" value="Blacklist Order" /-->
-							<input type="button" id="reject-blacklist" name="reject-blacklist" value="Blacklist Order" />
+							<input type="submit" name="reject-blacklist" value="Blacklist Order" />
+							<!--input type="button" id="reject-blacklist" name="reject-blacklist" value="Blacklist Order" /-->
 						</div>
 					</form>
 				</td>

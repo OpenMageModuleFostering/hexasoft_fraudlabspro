@@ -57,8 +57,12 @@ class Hexasoft_FraudLabsPro_Controller_Observer{
 			$ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
 		}
 
-		if(isset($_SERVER['HTTP_X_FORWARDED_FOR']) && filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP)){
-			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+		if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+			$xip = trim(current(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])));
+
+			if (filter_var($xip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+				$ip = $xip;
+			}
 		}
 
 		$payment_mode = $order->getPayment()->getMethod();
@@ -95,17 +99,19 @@ class Hexasoft_FraudLabsPro_Controller_Observer{
 			'payment_mode'		=> $paymentMode,
 			'flp_checksum'		=> Mage::getModel('core/cookie')->get('flp_checksum'),
 			'source'			=> 'magento',
-			'source_version'	=> '1.2.3',
+			'source_version'	=> '1.2.4',
 		);
 
 		$shippingAddress = $order->getShippingAddress();
 
 		if($shippingAddress){
-			$queries['ship_addr'] = trim($shippingAddress->getStreet(1) . ' ' . $shippingAddress->getStreet(2));
-			$queries['ship_city'] = $shippingAddress->getCity();
-			$queries['ship_state'] = $shippingAddress->getRegion();
-			$queries['ship_zip_code'] = $shippingAddress->getPostcode();
-			$queries['ship_country'] = $shippingAddress->getCountryId();
+			$queries['ship_first_name']	= $shippingAddress->getFirstname();
+			$queries['ship_last_name']	= $shippingAddress->getLastname();
+			$queries['ship_addr']		= trim($shippingAddress->getStreet(1) . ' ' . $shippingAddress->getStreet(2));
+			$queries['ship_city']		= $shippingAddress->getCity();
+			$queries['ship_state']		= $shippingAddress->getRegion();
+			$queries['ship_zip_code']	= $shippingAddress->getPostcode();
+			$queries['ship_country']	= $shippingAddress->getCountryId();
 		}
 
 		$response = $this->http('https://api.fraudlabspro.com/v1/order/screen?' . http_build_query($queries));
