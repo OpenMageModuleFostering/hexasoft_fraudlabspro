@@ -80,8 +80,9 @@ class Hexasoft_FraudLabsPro_Controller_Observer{
 			'currency'			=> Mage::app()->getStore()->getCurrentCurrencyCode(),
 			'user_order_id'		=> $orderId,
 			'magento_order_id'	=> $order->getEntityId(),
+			'flp_checksum'		=> Mage::getModel('core/cookie')->get('flp_checksum'),
 			'source'			=> 'magento',
-			'source_version'	=> '1.0.11',
+			'source_version'	=> '1.2.0',
 		);
 
 		$shippingAddress = $order->getShippingAddress();

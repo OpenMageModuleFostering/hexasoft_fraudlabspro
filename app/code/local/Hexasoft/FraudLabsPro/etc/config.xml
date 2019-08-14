@@ -2,7 +2,7 @@
 <config>
 	<modules>
 		<Hexasoft_FraudLabsPro>
-			<version>1.1.0</version>
+			<version>1.2.0</version>
 		</Hexasoft_FraudLabsPro>
 	</modules>
 
@@ -83,6 +83,13 @@
                 </args>
             </fraudlabspro>
 		</routers>
+		<layout>
+            <updates>
+                <fraudlabspro>
+                    <file>fraudlabspro_agent.xml</file>
+                </fraudlabspro>
+            </updates>
+        </layout>
 	</frontend>
 	 
 	<default>
