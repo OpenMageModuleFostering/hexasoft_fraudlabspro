@@ -66,6 +66,7 @@ class Hexasoft_FraudLabsPro_Controller_Observer{
 			'user_order_id'=>$order->getIncrementId(),
 			'magento_order_id'=>$order->getEntityId(),
 			'source'=>'magento',
+			'source_version'=>'1.0.9',
 		);
 
 		$shippingAddress = $order->getShippingAddress();
