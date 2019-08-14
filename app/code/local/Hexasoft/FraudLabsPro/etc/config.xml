@@ -2,7 +2,7 @@
 <config>
 	<modules>
 		<Hexasoft_FraudLabsPro>
-			<version>1.2.0</version>
+			<version>1.2.1</version>
 		</Hexasoft_FraudLabsPro>
 	</modules>
 
@@ -51,7 +51,7 @@
         </resources>
 		
 		<events>
-			<sales_order_save_commit_after>
+			<sales_order_place_after>
 				<observers>
 					<send_request_to_fraudlabspro>
 						<type>singleton</type>
@@ -59,7 +59,7 @@
 						<method>sendRequestToFraudLabsPro</method>
 					</send_request_to_fraudlabspro>
 				</observers>
-			</sales_order_save_commit_after>  
+			</sales_order_place_after>  
 		</events>
 	</global>
 

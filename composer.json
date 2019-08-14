@@ -1,7 +1,7 @@
 {
     "name": "OpenMageModuleFostering/Hexasoft_FraudLabsPro",
     "type": "magento-module",
-    "license": "Open-Software-License-(OSL)",
+    "license": "GNU-Lesser-General-Public-License-(LGPL)",
     "homepage": "",
     "description": "This extension screens online transactions for frauds.",
     "authors": [

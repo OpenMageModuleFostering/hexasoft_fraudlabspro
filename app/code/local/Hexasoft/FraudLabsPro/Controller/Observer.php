@@ -130,6 +130,8 @@ class Hexasoft_FraudLabsPro_Controller_Observer{
 					break;
 
 				case 'holded':
+					$order->setHoldBeforeState($order->getState());
+					$order->setHoldBeforeStatus($order->getStatus());
 					$order->setState(Mage_Sales_Model_Order::STATE_HOLDED, true)->save();
 					break;
 
@@ -161,6 +163,8 @@ class Hexasoft_FraudLabsPro_Controller_Observer{
 					break;
 
 				case 'holded':
+					$order->setHoldBeforeState($order->getState());
+					$order->setHoldBeforeStatus($order->getStatus());
 					$order->setState(Mage_Sales_Model_Order::STATE_HOLDED, true)->save();
 					break;
 
