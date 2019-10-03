@@ -1,16 +1,19 @@
 {
-    "name": "OpenMageModuleFostering/Hexasoft_FraudLabsPro",
+    "name": "OpenMageModuleFostering\/Hexasoft_FraudLabsPro",
     "type": "magento-module",
     "license": "GNU-Lesser-General-Public-License-(LGPL)",
     "homepage": "",
     "description": "This extension screens online transactions for frauds.",
     "authors": [
-    {
-        "name": "Hexasoft",
-        "email": "tech@hexasoft.com.my"
-    }
-],
+        {
+            "name": "Hexasoft",
+            "email": "tech@hexasoft.com.my"
+        }
+    ],
     "suggest": {
-        "magento-hackathon/magento-composer-installer": "*"
-    }
+        "magento-hackathon\/magento-composer-installer": "*"
+    },
+    "keywords": [
+        "openmage-module"
+    ]
 }
